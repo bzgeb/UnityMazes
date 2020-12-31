@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000000, guid: 82c65d0bfa6b0d549bd30356e6009d5d, type: 2}
+  m_LightingDataAsset: {fileID: 112000000, guid: 5531419c7eadf1c46a3ff734597d6d93, type: 2}
   m_LightingSettings: {fileID: 4890085278179872738, guid: ea2e3ab6db3bf9840b80a4dce1fad078, type: 2}
 --- !u!196 &4
 NavMeshSettings:
@@ -437,7 +437,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f9717d9d772479d89c78662ac1a1ee9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _generationAlgorithm: 0
+  _generationAlgorithm: 1
   _mazeTiles: {fileID: 11400000, guid: 0d9bec8329a4e9843896ec0a6ad326d0, type: 2}
 --- !u!4 &1526044320
 Transform:

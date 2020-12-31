@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class Grid
@@ -46,7 +46,7 @@ public class Cell
         West = 0b1000
     }
 
-    public Grid Grid;
+    readonly Grid _grid;
     public int Column;
     public int Row;
 
@@ -54,7 +54,7 @@ public class Cell
 
     public Cell(Grid grid, int column, int row)
     {
-        Grid = grid;
+        _grid = grid;
         Column = column;
         Row = row;
     }
@@ -81,10 +81,10 @@ public class Cell
     {
         var result = new Neighbours
         {
-            North = Maze.HasNorthCell(Row, Grid.Rows) ? Maze.GetNorthCell(Grid, Column, Row) : null,
-            East = Maze.HasEastCell(Column, Grid.Columns) ? Maze.GetEastCell(Grid, Column, Row) : null,
-            South = Maze.HasSouthCell(Row) ? Maze.GetSouthCell(Grid, Column, Row) : null,
-            West = Maze.HasWestCell(Column) ? Maze.GetWestCell(Grid, Column, Row) : null
+            North = Maze.HasNorthCell(Row, _grid.Rows) ? Maze.GetNorthCell(_grid, Column, Row) : null,
+            East = Maze.HasEastCell(Column, _grid.Columns) ? Maze.GetEastCell(_grid, Column, Row) : null,
+            South = Maze.HasSouthCell(Row) ? Maze.GetSouthCell(_grid, Column, Row) : null,
+            West = Maze.HasWestCell(Column) ? Maze.GetWestCell(_grid, Column, Row) : null
         };
 
         return result;
@@ -121,6 +121,12 @@ public class Cell
 
 public static class Maze
 {
+    public enum GenerationAlgorithm
+    {
+        BinaryTree,
+        Sidewinder
+    }
+    
     public static int GetCellIndex(int column, int row, int columns)
     {
         return row * columns + column;
@@ -197,10 +203,14 @@ public static class Maze
             {
                 cell.Link(GetNorthCell(grid, cell.Column, cell.Row), true);
             }
-            else
-            {
-                //Do Nothing
-            }
+        }
+    }
+
+    public static void GenerateSidewinder(Grid grid)
+    {
+        for (int i = 0; i < grid.Cells.Length; i += grid.Columns)
+        {
+            Debug.Log($"Row {i}");
         }
     }
 }

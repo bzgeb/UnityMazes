@@ -2,33 +2,28 @@
 
 public class MazeGenerator : MonoBehaviour
 {
-    public MazeTile TileNoWalls;
-    public MazeTile TileAllWalls;
-
-    public MazeTile TileOneWallN;
-    public MazeTile TileOneWallE;
-    public MazeTile TileOneWallS;
-    public MazeTile TileOneWallW;
-
-    public MazeTile TileTwoWallCornerES;
-    public MazeTile TileTwoWallCornerNE;
-    public MazeTile TileTwoWallCornerSW;
-    public MazeTile TileTwoWallCornerWN;
-
-    public MazeTile TileTwoWallHallEW;
-    public MazeTile TileTwoWallHallNS;
-
-    public MazeTile TileThreeWallESW;
-    public MazeTile TileThreeWallNES;
-    public MazeTile TileThreeWallSWN;
-    public MazeTile TileThreeWallWNE;
-
+    [SerializeField] Maze.GenerationAlgorithm _generationAlgorithm;
+    [SerializeField] MazeTiles _mazeTiles;
+    
     void Start()
     {
         Grid grid = new Grid(10, 10);
-        Maze.GenerateBinaryTree(grid);
+        
+        switch (_generationAlgorithm)
+        {
+            case Maze.GenerationAlgorithm.BinaryTree:
+                Maze.GenerateBinaryTree(grid);
+                break;
+            case Maze.GenerationAlgorithm.Sidewinder:
+                Maze.GenerateSidewinder(grid);
+                break;
+        }
 
-        int i = 0;
+        InstantiateMazeTiles(grid);
+    }
+
+    void InstantiateMazeTiles(Grid grid)
+    {
         foreach (var cell in grid.Cells)
         {
             var tile = GetTilePrefab(cell);
@@ -39,55 +34,55 @@ public class MazeGenerator : MonoBehaviour
 
     MazeTile GetTilePrefab(Cell cell)
     {
-        MazeTile result = TileNoWalls;
-        
+        MazeTile result = _mazeTiles.TileNoWalls;
+
         var walls = cell.GetWalls();
         switch (walls)
         {
             case (Cell.Walls) 0b0001:
-                result = TileOneWallN;
+                result = _mazeTiles.TileOneWallN;
                 break;
             case (Cell.Walls) 0b0010:
-                result = TileOneWallE;
+                result = _mazeTiles.TileOneWallE;
                 break;
             case (Cell.Walls) 0b0011:
-                result = TileTwoWallCornerNE;
+                result = _mazeTiles.TileTwoWallCornerNE;
                 break;
             case (Cell.Walls) 0b0100:
-                result = TileOneWallS;
+                result = _mazeTiles.TileOneWallS;
                 break;
             case (Cell.Walls) 0b0101:
-                result = TileTwoWallHallNS;
+                result = _mazeTiles.TileTwoWallHallNS;
                 break;
             case (Cell.Walls) 0b0110:
-                result = TileTwoWallCornerES;
+                result = _mazeTiles.TileTwoWallCornerES;
                 break;
             case (Cell.Walls) 0b0111:
-                result = TileThreeWallNES;
+                result = _mazeTiles.TileThreeWallNES;
                 break;
             case (Cell.Walls) 0b1000:
-                result = TileOneWallW;
+                result = _mazeTiles.TileOneWallW;
                 break;
             case (Cell.Walls) 0b1001:
-                result = TileTwoWallCornerWN;
+                result = _mazeTiles.TileTwoWallCornerWN;
                 break;
             case (Cell.Walls) 0b1010:
-                result = TileTwoWallHallEW;
+                result = _mazeTiles.TileTwoWallHallEW;
                 break;
             case (Cell.Walls) 0b1011:
-                result = TileThreeWallWNE;
+                result = _mazeTiles.TileThreeWallWNE;
                 break;
             case (Cell.Walls) 0b1100:
-                result = TileTwoWallCornerSW;
+                result = _mazeTiles.TileTwoWallCornerSW;
                 break;
             case (Cell.Walls) 0b1101:
-                result = TileThreeWallSWN;
+                result = _mazeTiles.TileThreeWallSWN;
                 break;
             case (Cell.Walls) 0b1110:
-                result = TileThreeWallESW;
+                result = _mazeTiles.TileThreeWallESW;
                 break;
             case (Cell.Walls) 0b1111:
-                result = TileAllWalls;
+                result = _mazeTiles.TileAllWalls;
                 break;
         }
 

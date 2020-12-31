@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59c0623d4db64a849ec56cb8d0a5ed5e, type: 3}
+  m_Name: MazeTiles
+  m_EditorClassIdentifier: 
+  TileNoWalls: {fileID: 3094297660323921462, guid: beafd5add3bff774cba15a1aafbefbe1, type: 3}
+  TileAllWalls: {fileID: -6721573015640787340, guid: 663d4508d0b4f94479f3eae46ff97448, type: 3}
+  TileOneWallN: {fileID: 172867303008896278, guid: c822f2a9a77d0014dbc0c97374669759, type: 3}
+  TileOneWallE: {fileID: 7336134832180667045, guid: 965edda22e5b24349a2a77e0b19feb3d, type: 3}
+  TileOneWallS: {fileID: -5015004090663807758, guid: 2190dc0c5f5c6654e918a6a9cc6037c6, type: 3}
+  TileOneWallW: {fileID: 2625506146030456629, guid: 6475f1dad57bc4d4cadb520d5def492a, type: 3}
+  TileTwoWallCornerES: {fileID: 7031361024469203429, guid: 43d81a35b03866d47a5b23efc7a041be, type: 3}
+  TileTwoWallCornerNE: {fileID: 5115777017329483474, guid: df783f78163d9d84e9e0731c16394fa7, type: 3}
+  TileTwoWallCornerSW: {fileID: -2223389581571140170, guid: 8fd95b5da9079ed43a3d1b3492fe61a6, type: 3}
+  TileTwoWallCornerWN: {fileID: -7788473246659753024, guid: 9035c9b773791fb4eaa9ecb08038da29, type: 3}
+  TileTwoWallHallEW: {fileID: 3725971034650538619, guid: 819b65d60a866e14f863e710d69f5124, type: 3}
+  TileTwoWallHallNS: {fileID: 6117043418003327443, guid: 7908ba360e679aa48bd6515ac4d07395, type: 3}
+  TileThreeWallESW: {fileID: -1926711593872419287, guid: f1cc634aa8d63ff4791128c646046c57, type: 3}
+  TileThreeWallNES: {fileID: -356979889495182187, guid: 5734b907d54c4fb4db296f7a16eb483b, type: 3}
+  TileThreeWallSWN: {fileID: -940424463835809708, guid: 424be7dd17214da4e9b4abccf5ad1140, type: 3}
+  TileThreeWallWNE: {fileID: -2417951033310288580, guid: 5df9a2219dd26c540a79ff57b481f310, type: 3}
