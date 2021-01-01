@@ -126,7 +126,7 @@ public static class Maze
         BinaryTree,
         Sidewinder
     }
-    
+
     public static int GetCellIndex(int column, int row, int columns)
     {
         return row * columns + column;
@@ -208,9 +208,32 @@ public static class Maze
 
     public static void GenerateSidewinder(Grid grid)
     {
+        var run = new List<Cell>(grid.Columns);
+        //For Each Row
         for (int i = 0; i < grid.Cells.Length; i += grid.Columns)
         {
-            Debug.Log($"Row {i}");
+            //For each cell in a row
+            for (int c = i; c < i + grid.Columns; ++c)
+            {
+                var cell = grid.Cells[c];
+                run.Add(cell);
+
+                bool hasNorthCell = HasNorthCell(cell.Row, grid.Rows);
+                bool hasEastCell = HasEastCell(cell.Column, grid.Columns);
+                bool shouldCloseOut = !hasEastCell || (hasNorthCell && Random.value > 0.5f);
+
+                if (shouldCloseOut)
+                {
+                    var member = SampleUtil<Cell>.Sample(run);
+                    if (HasNorthCell(member.Row, grid.Rows))
+                        member.Link(GetNorthCell(grid, member.Column, member.Row), true);
+                    run.Clear();
+                }
+                else
+                {
+                    cell.Link(GetEastCell(grid, cell.Column, cell.Row), true);
+                }
+            }
         }
     }
 }
