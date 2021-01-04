@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class Grid
@@ -235,5 +234,31 @@ public static class Maze
                 }
             }
         }
+    }
+
+    public static Dictionary<Cell, int> CalculateDistancesFromRoot(Grid grid, Cell root)
+    {
+        var result = new Dictionary<Cell, int>(grid.Cells.Length);
+        var frontier = new HashSet<Cell> {root};
+
+        result.Add(root, 0);
+        while (frontier.Count > 0)
+        {
+            var newFrontier = new HashSet<Cell>();
+            foreach (Cell cell in frontier)
+            {
+                foreach (Cell link in cell.Links)
+                {
+                    if (result.ContainsKey(link)) continue;
+
+                    result.Add(link, result[cell] + 1);
+                    newFrontier.Add(link);
+                }
+            }
+
+            frontier = newFrontier;
+        }
+
+        return result;
     }
 }

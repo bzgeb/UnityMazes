@@ -4,11 +4,11 @@ public class MazeGenerator : MonoBehaviour
 {
     [SerializeField] Maze.GenerationAlgorithm _generationAlgorithm;
     [SerializeField] MazeTiles _mazeTiles;
-    
+
     void Start()
     {
         Grid grid = new Grid(10, 10);
-        
+
         switch (_generationAlgorithm)
         {
             case Maze.GenerationAlgorithm.BinaryTree:
@@ -24,11 +24,16 @@ public class MazeGenerator : MonoBehaviour
 
     void InstantiateMazeTiles(Grid grid)
     {
+        var djikstraDistances = Maze.CalculateDistancesFromRoot(grid, grid.Cells[0]);
+
         foreach (var cell in grid.Cells)
         {
             var tile = GetTilePrefab(cell);
             var position = new Vector3(cell.Column * 2, 0, cell.Row * 2);
-            Instantiate(tile, position, tile.transform.rotation);
+            var mazeTile = Instantiate(tile, position, tile.transform.rotation);
+            var debugDistance = mazeTile.gameObject.AddComponent<DebugDistance>();
+            debugDistance.Root = grid.Cells[0];
+            debugDistance.DistanceFromRoot = djikstraDistances[cell];
         }
     }
 
