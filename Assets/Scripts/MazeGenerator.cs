@@ -25,15 +25,25 @@ public class MazeGenerator : MonoBehaviour
     void InstantiateMazeTiles(Grid grid)
     {
         var djikstraDistances = Maze.CalculateDistancesFromRoot(grid, grid.Cells[0]);
+        var path = Maze.CalculatePath(grid, grid.Cells[0], grid.Cells[grid.Cells.Length - 1]);
 
         foreach (var cell in grid.Cells)
         {
             var tile = GetTilePrefab(cell);
             var position = new Vector3(cell.Column * 2, 0, cell.Row * 2);
             var mazeTile = Instantiate(tile, position, tile.transform.rotation);
+            
             var debugDistance = mazeTile.gameObject.AddComponent<DebugDistance>();
             debugDistance.Root = grid.Cells[0];
             debugDistance.DistanceFromRoot = djikstraDistances[cell];
+
+            var pathMaterialPropertyBlock = new MaterialPropertyBlock();
+            pathMaterialPropertyBlock.SetColor("_Color", Color.green);
+            if (path.Contains(cell))
+            {
+                var renderer = mazeTile.GetComponent<MeshRenderer>();
+                renderer.SetPropertyBlock(pathMaterialPropertyBlock);
+            }
         }
     }
 

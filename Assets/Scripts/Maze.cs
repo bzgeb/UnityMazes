@@ -261,4 +261,29 @@ public static class Maze
 
         return result;
     }
+
+    public static List<Cell> CalculatePath(Grid grid, Cell root, Cell goal)
+    {
+        var result = new List<Cell>();
+        var current = goal;
+        result.Add(current);
+
+        var distances = CalculateDistancesFromRoot(grid, root);
+
+        while (current != root)
+        {
+            foreach (var link in current.Links)
+            {
+                if (distances[link] < distances[current])
+                {
+                    result.Add(link);
+                    current = link;
+                    break;
+                }
+            }
+        }
+
+        result.Reverse();
+        return result;
+    }
 }
