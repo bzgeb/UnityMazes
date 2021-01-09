@@ -1,13 +1,17 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 public class MazeGenerator : MonoBehaviour
 {
     [SerializeField] Maze.GenerationAlgorithm _generationAlgorithm;
     [SerializeField] MazeTiles _mazeTiles;
-
+    [SerializeField] Color _mazeColor;
+    [SerializeField] int _columns = 20;
+    [SerializeField] int _rows = 20;
+    
     void Start()
     {
-        Grid grid = new Grid(10, 10);
+        Grid grid = new Grid(_columns, _rows);
 
         switch (_generationAlgorithm)
         {
@@ -24,9 +28,13 @@ public class MazeGenerator : MonoBehaviour
 
     void InstantiateMazeTiles(Grid grid)
     {
-        var djikstraDistances = Maze.CalculateDistancesFromRoot(grid, grid.Cells[0]);
-        var path = Maze.CalculateLongestPath(grid);
+        //var djikstraDistances = Maze.CalculateDistancesFromRoot(grid, grid.Cells[0]);
+        //var path = Maze.CalculateLongestPath(grid);
         //var path = Maze.CalculatePath(grid, grid.Cells[0], grid.Cells[grid.Cells.Length - 1]);
+
+        var middleCell = Maze.GetCell(grid, grid.Columns / 2, grid.Rows / 2);
+        var distances = Maze.CalculateDistancesFromRoot(grid, middleCell);
+        var maxDistance = distances.Values.Max();
 
         foreach (var cell in grid.Cells)
         {
@@ -34,17 +42,18 @@ public class MazeGenerator : MonoBehaviour
             var position = new Vector3(cell.Column * 2, 0, cell.Row * 2);
             var mazeTile = Instantiate(tile, position, tile.transform.rotation);
             
-            var debugDistance = mazeTile.gameObject.AddComponent<DebugDistance>();
-            debugDistance.Root = grid.Cells[0];
-            debugDistance.DistanceFromRoot = djikstraDistances[cell];
-
-            var pathMaterialPropertyBlock = new MaterialPropertyBlock();
-            pathMaterialPropertyBlock.SetColor("_Color", Color.green);
-            if (path.Contains(cell))
-            {
-                var renderer = mazeTile.GetComponent<MeshRenderer>();
-                renderer.SetPropertyBlock(pathMaterialPropertyBlock);
-            }
+            var tileMaterialPropertyBlock = new MaterialPropertyBlock();
+            var distance = distances[cell];
+            float h, s, v;
+            Color.RGBToHSV(_mazeColor, out h, out s, out v);
+            s = 1 - ((maxDistance - distance) / (float)maxDistance);
+            
+            tileMaterialPropertyBlock.SetColor("_Color", Color.HSVToRGB(h, s, v));
+            // if (path.Contains(cell))
+            // {
+                 var renderer = mazeTile.GetComponent<MeshRenderer>();
+                 renderer.SetPropertyBlock(tileMaterialPropertyBlock);
+            // }
         }
     }
 
