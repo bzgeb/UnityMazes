@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Random = UnityEngine.Random;
 
 public class Grid
@@ -285,5 +286,17 @@ public static class Maze
 
         result.Reverse();
         return result;
+    }
+
+    public static List<Cell> CalculateLongestPath(Grid grid)
+    {
+        var distances = CalculateDistancesFromRoot(grid, grid.Cells[0]);
+        var maxDistanceCell = distances.Aggregate((x, y) => x.Value > y.Value ? x : y).Key;
+        
+        distances.Clear();
+        distances = CalculateDistancesFromRoot(grid, maxDistanceCell);
+        var newMaxDistanceCell = distances.Aggregate((x, y) => x.Value > y.Value ? x : y).Key;
+
+        return CalculatePath(grid, maxDistanceCell, newMaxDistanceCell);
     }
 }

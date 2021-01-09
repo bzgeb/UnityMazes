@@ -25,7 +25,8 @@ public class MazeGenerator : MonoBehaviour
     void InstantiateMazeTiles(Grid grid)
     {
         var djikstraDistances = Maze.CalculateDistancesFromRoot(grid, grid.Cells[0]);
-        var path = Maze.CalculatePath(grid, grid.Cells[0], grid.Cells[grid.Cells.Length - 1]);
+        var path = Maze.CalculateLongestPath(grid);
+        //var path = Maze.CalculatePath(grid, grid.Cells[0], grid.Cells[grid.Cells.Length - 1]);
 
         foreach (var cell in grid.Cells)
         {
