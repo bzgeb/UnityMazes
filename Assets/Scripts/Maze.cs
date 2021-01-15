@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditorInternal;
 using Random = UnityEngine.Random;
 
 public class Grid
@@ -90,6 +91,17 @@ public class Cell
         return result;
     }
 
+    public List<Cell> GetNeighboursList()
+    {
+        var result = new List<Cell>();
+        if (Maze.HasNorthCell(Row, _grid.Rows)) result.Add(Maze.GetNorthCell(_grid, Column, Row));
+        if (Maze.HasEastCell(Column, _grid.Columns)) result.Add(Maze.GetEastCell(_grid, Column, Row));
+        if (Maze.HasSouthCell(Row)) result.Add(Maze.GetSouthCell(_grid, Column, Row));
+        if (Maze.HasWestCell(Column)) result.Add(Maze.GetWestCell(_grid, Column, Row));
+        
+        return result;
+    }
+
     public Walls GetWalls()
     {
         var result = new Walls();
@@ -124,7 +136,8 @@ public static class Maze
     public enum GenerationAlgorithm
     {
         BinaryTree,
-        Sidewinder
+        Sidewinder,
+        AldousBroder
     }
 
     public static int GetCellIndex(int column, int row, int columns)
@@ -135,6 +148,11 @@ public static class Maze
     public static Cell GetCell(Grid grid, int column, int row)
     {
         return grid.Cells[GetCellIndex(column, row, grid.Columns)];
+    }
+
+    public static Cell GetRandomCell(Grid grid)
+    {
+        return GetCell(grid, Random.Range(0, grid.Columns), Random.Range(0, grid.Rows));
     }
 
     public static bool HasNorthCell(int row, int rows)
@@ -234,6 +252,26 @@ public static class Maze
                     cell.Link(GetEastCell(grid, cell.Column, cell.Row), true);
                 }
             }
+        }
+    }
+
+    public static void GenerateAldousBroder(Grid grid)
+    {
+        var cell = GetRandomCell(grid);
+        int unvisitied = grid.Cells.Length - 1;
+
+        while (unvisitied > 0)
+        {
+            var neighbours = cell.GetNeighboursList();
+            var neighbour = SampleUtil<Cell>.Sample(neighbours);
+
+            if (neighbour.Links.Count == 0)
+            {
+                cell.Link(neighbour, true);
+                unvisitied -= 1;
+            }
+
+            cell = neighbour;
         }
     }
 

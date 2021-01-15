@@ -21,6 +21,9 @@ public class MazeGenerator : MonoBehaviour
             case Maze.GenerationAlgorithm.Sidewinder:
                 Maze.GenerateSidewinder(grid);
                 break;
+            case Maze.GenerationAlgorithm.AldousBroder:
+                Maze.GenerateAldousBroder(grid);
+                break;
         }
 
         InstantiateMazeTiles(grid);
