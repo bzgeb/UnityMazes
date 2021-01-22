@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditorInternal;
 using Random = UnityEngine.Random;
 
 public class Grid
@@ -98,7 +97,7 @@ public class Cell
         if (Maze.HasEastCell(Column, _grid.Columns)) result.Add(Maze.GetEastCell(_grid, Column, Row));
         if (Maze.HasSouthCell(Row)) result.Add(Maze.GetSouthCell(_grid, Column, Row));
         if (Maze.HasWestCell(Column)) result.Add(Maze.GetWestCell(_grid, Column, Row));
-        
+
         return result;
     }
 
@@ -137,7 +136,8 @@ public static class Maze
     {
         BinaryTree,
         Sidewinder,
-        AldousBroder
+        AldousBroder,
+        Wilson
     }
 
     public static int GetCellIndex(int column, int row, int columns)
@@ -275,6 +275,37 @@ public static class Maze
         }
     }
 
+    public static void GenerateWilson(Grid grid)
+    {
+        var unvisitedCells = new List<Cell>(grid.Cells);
+
+        var firstCell = SampleUtil<Cell>.Sample(unvisitedCells);
+        unvisitedCells.Remove(firstCell);
+
+        while (unvisitedCells.Count > 0)
+        {
+            var cell = SampleUtil<Cell>.Sample(unvisitedCells);
+            List<Cell> path = new List<Cell> {cell};
+
+            while (unvisitedCells.Contains(cell))
+            {
+                cell = SampleUtil<Cell>.Sample(cell.GetNeighboursList());
+                var cellIndex = path.IndexOf(cell);
+
+                if (cellIndex == -1)
+                    path.Add(cell);
+                else
+                    path = path.GetRange(0, cellIndex + 1);
+            }
+
+            for (int i = 0; i < path.Count - 1; ++i)
+            {
+                path[i].Link(path[i + 1], true);
+                unvisitedCells.Remove(path[i]);
+            }
+        }
+    }
+
     public static Dictionary<Cell, int> CalculateDistancesFromRoot(Grid grid, Cell root)
     {
         var result = new Dictionary<Cell, int>(grid.Cells.Length);
@@ -330,7 +361,7 @@ public static class Maze
     {
         var distances = CalculateDistancesFromRoot(grid, grid.Cells[0]);
         var maxDistanceCell = distances.Aggregate((x, y) => x.Value > y.Value ? x : y).Key;
-        
+
         distances.Clear();
         distances = CalculateDistancesFromRoot(grid, maxDistanceCell);
         var newMaxDistanceCell = distances.Aggregate((x, y) => x.Value > y.Value ? x : y).Key;
