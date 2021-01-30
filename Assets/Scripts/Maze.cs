@@ -137,7 +137,8 @@ public static class Maze
         BinaryTree,
         Sidewinder,
         AldousBroder,
-        Wilson
+        Wilson,
+        HuntAndKill
     }
 
     public static int GetCellIndex(int column, int row, int columns)
@@ -258,9 +259,9 @@ public static class Maze
     public static void GenerateAldousBroder(Grid grid)
     {
         var cell = GetRandomCell(grid);
-        int unvisitied = grid.Cells.Length - 1;
+        int unvisited = grid.Cells.Length - 1;
 
-        while (unvisitied > 0)
+        while (unvisited > 0)
         {
             var neighbours = cell.GetNeighboursList();
             var neighbour = SampleUtil<Cell>.Sample(neighbours);
@@ -268,7 +269,7 @@ public static class Maze
             if (neighbour.Links.Count == 0)
             {
                 cell.Link(neighbour, true);
-                unvisitied -= 1;
+                unvisited -= 1;
             }
 
             cell = neighbour;
@@ -302,6 +303,36 @@ public static class Maze
             {
                 path[i].Link(path[i + 1], true);
                 unvisitedCells.Remove(path[i]);
+            }
+        }
+    }
+
+    public static void GenerateHuntAndKill(Grid grid)
+    {
+        var currentCell = GetRandomCell(grid);
+
+        while (currentCell != null)
+        {
+            var unvisitedNeighbours = currentCell.GetNeighboursList().FindAll(c => c.Links.Count == 0);
+            if (unvisitedNeighbours.Count > 0)
+            {
+                var neighbour = unvisitedNeighbours.Sample();
+                currentCell.Link(neighbour, true);
+                currentCell = neighbour;
+            }
+            else
+            {
+                currentCell = null;
+                foreach (var cell in grid.Cells)
+                {
+                    var visitedNeighbours = cell.GetNeighboursList().FindAll(c => c.Links.Count > 0);
+                    if (cell.Links.Count == 0 && visitedNeighbours.Count > 0)
+                    {
+                        currentCell = cell;
+                        var neighbour = visitedNeighbours.Sample();
+                        currentCell.Link(neighbour, true);
+                    }
+                }
             }
         }
     }

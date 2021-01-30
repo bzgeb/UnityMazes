@@ -13,3 +13,4 @@ public static class SampleUtil<T>
         return collection[Random.Range(0, collection.Length)];
     }
 }
+

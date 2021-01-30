@@ -30,6 +30,9 @@ public class MazeGenerator : MonoBehaviour
             case Maze.GenerationAlgorithm.Wilson:
                 Maze.GenerateWilson(grid);
                 break;
+            case Maze.GenerationAlgorithm.HuntAndKill:
+                Maze.GenerateHuntAndKill(grid);
+                break;
         }
 
         InstantiateMazeTiles(grid);
