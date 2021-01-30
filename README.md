@@ -9,3 +9,9 @@ C# Maze Generation algorithms in Unity. Based on the book Mazes for Programmers.
 
 ## AldousBroder Maze
 ![AldousBroder Maze Example](https://github.com/bzgeb/UnityMazes/blob/main/AldousBroder.png)
+
+## Wilson's Maze
+![Wilson's Maze Example](https://github.com/bzgeb/UnityMazes/blob/main/Wilsons.png)
+
+## Hunt and Kill Maze
+![Hunt and Kill Maze Example](https://github.com/bzgeb/UnityMazes/blob/main/HuntAndKill.png)
