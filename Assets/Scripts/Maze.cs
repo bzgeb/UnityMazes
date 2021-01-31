@@ -141,6 +141,8 @@ public static class Maze
         HuntAndKill
     }
 
+    public delegate void GenerateMaze(Grid grid);
+
     public static int GetCellIndex(int column, int row, int columns)
     {
         return row * columns + column;
@@ -398,5 +400,17 @@ public static class Maze
         var newMaxDistanceCell = distances.Aggregate((x, y) => x.Value > y.Value ? x : y).Key;
 
         return CalculatePath(grid, maxDistanceCell, newMaxDistanceCell);
+    }
+
+    public static List<Cell> CalculateDeadEnds(Grid grid)
+    {
+        List<Cell> result = new List<Cell>();
+        foreach (var cell in grid.Cells)
+        {
+            if (cell.Links.Count == 1) 
+                result.Add(cell);
+        }
+
+        return result;
     }
 }

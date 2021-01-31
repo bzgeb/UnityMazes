@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using UnityEngine;
 
 public class MazeGenerator : MonoBehaviour
@@ -14,6 +15,8 @@ public class MazeGenerator : MonoBehaviour
 
     void Start()
     {
+        CalculateAverageDeadEnds();
+        
         Grid grid = new Grid(_columns, _rows);
 
         switch (_generationAlgorithm)
@@ -131,5 +134,40 @@ public class MazeGenerator : MonoBehaviour
         }
 
         return result;
+    }
+
+    void CalculateAverageDeadEnds()
+    {
+        var algorithms = new List<Maze.GenerateMaze>
+        {
+            Maze.GenerateBinaryTree,
+            Maze.GenerateSidewinder,
+            Maze.GenerateAldousBroder,
+            Maze.GenerateWilson,
+            Maze.GenerateHuntAndKill
+        };
+
+        const int tries = 100;
+        const int size = 20;
+
+        StringBuilder result = new StringBuilder();
+
+        foreach (var algorithm in algorithms)
+        {
+            int averageDeadEnds = 0;
+            for (int i = 0; i < tries; ++i)
+            {
+                var grid = new Grid(size, size);
+                algorithm(grid);
+
+                var deadEnds = Maze.CalculateDeadEnds(grid);
+                averageDeadEnds += deadEnds.Count;
+            }
+
+            averageDeadEnds /= tries;
+            result.Append($"{algorithm.Method.Name}: {averageDeadEnds}\n");
+        }
+
+        Debug.Log(result.ToString());
     }
 }
