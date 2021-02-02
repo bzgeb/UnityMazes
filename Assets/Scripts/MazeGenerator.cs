@@ -15,7 +15,7 @@ public class MazeGenerator : MonoBehaviour
 
     void Start()
     {
-        CalculateAverageDeadEnds();
+        CalculateAverageDeadEnds(1);
         
         Grid grid = new Grid(_columns, _rows);
 
@@ -38,10 +38,10 @@ public class MazeGenerator : MonoBehaviour
                 break;
         }
 
-        InstantiateMazeTiles(grid);
+        InstantiateMazeTiles(grid, true);
     }
 
-    public void InstantiateMazeTiles(Grid grid)
+    public void InstantiateMazeTiles(Grid grid, bool colorByDistance)
     {
         for (int i = _liveMazeTiles.Count - 1; i >= 0; --i)
         {
@@ -64,18 +64,19 @@ public class MazeGenerator : MonoBehaviour
             MazeTile mazeTile = Instantiate(tile, position, tile.transform.rotation);
             _liveMazeTiles.Add(mazeTile);
 
-            var tileMaterialPropertyBlock = new MaterialPropertyBlock();
-            var distance = distances[cell];
-            float h, s, v;
-            Color.RGBToHSV(_mazeColor, out h, out s, out v);
-            s = 1 - ((maxDistance - distance) / (float) maxDistance);
-
-            tileMaterialPropertyBlock.SetColor("_Color", Color.HSVToRGB(h, s, v));
-            // if (path.Contains(cell))
-            // {
-            var tileRenderer = mazeTile.GetComponent<MeshRenderer>();
-            tileRenderer.SetPropertyBlock(tileMaterialPropertyBlock);
-            // }
+            if (colorByDistance)
+            {
+                var tileMaterialPropertyBlock = new MaterialPropertyBlock();
+                var distance = distances[cell];
+                float h, s, v;
+                Color.RGBToHSV(_mazeColor, out h, out s, out v);
+                s = 1 - ((maxDistance - distance) / (float) maxDistance);
+                
+                tileMaterialPropertyBlock.SetColor("_Color", Color.HSVToRGB(h, s, v));
+                
+                var tileRenderer = mazeTile.GetComponent<MeshRenderer>();
+                tileRenderer.SetPropertyBlock(tileMaterialPropertyBlock);
+            }
         }
     }
 
@@ -136,7 +137,7 @@ public class MazeGenerator : MonoBehaviour
         return result;
     }
 
-    void CalculateAverageDeadEnds()
+    void CalculateAverageDeadEnds(int tries)
     {
         var algorithms = new List<Maze.GenerateMaze>
         {
@@ -147,9 +148,6 @@ public class MazeGenerator : MonoBehaviour
             Maze.GenerateHuntAndKill
         };
 
-        const int tries = 100;
-        const int size = 20;
-
         StringBuilder result = new StringBuilder();
 
         foreach (var algorithm in algorithms)
@@ -157,7 +155,7 @@ public class MazeGenerator : MonoBehaviour
             int averageDeadEnds = 0;
             for (int i = 0; i < tries; ++i)
             {
-                var grid = new Grid(size, size);
+                var grid = new Grid(_columns, _rows);
                 algorithm(grid);
 
                 var deadEnds = Maze.CalculateDeadEnds(grid);

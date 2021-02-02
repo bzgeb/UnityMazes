@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class Grid
@@ -333,6 +335,42 @@ public static class Maze
                         currentCell = cell;
                         var neighbour = visitedNeighbours.Sample();
                         currentCell.Link(neighbour, true);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    public static IEnumerator GenerateHuntAndKill(Grid grid, MazeGenerator mazeGenerator)
+    {
+        var currentCell = GetRandomCell(grid);
+
+        while (currentCell != null)
+        {
+            var unvisitedNeighbours = currentCell.GetNeighboursList().FindAll(c => c.Links.Count == 0);
+            if (unvisitedNeighbours.Count > 0)
+            {
+                var neighbour = unvisitedNeighbours.Sample();
+                currentCell.Link(neighbour, true);
+                currentCell = neighbour;
+                mazeGenerator.InstantiateMazeTiles(grid, false);
+                yield return new WaitForSeconds(0.1f);
+            }
+            else
+            {
+                currentCell = null;
+                foreach (var cell in grid.Cells)
+                {
+                    var visitedNeighbours = cell.GetNeighboursList().FindAll(c => c.Links.Count > 0);
+                    if (cell.Links.Count == 0 && visitedNeighbours.Count > 0)
+                    {
+                        currentCell = cell;
+                        var neighbour = visitedNeighbours.Sample();
+                        currentCell.Link(neighbour, true);
+                        mazeGenerator.InstantiateMazeTiles(grid, false);
+                        yield return new WaitForSeconds(0.1f);
+                        break;
                     }
                 }
             }
@@ -407,7 +445,7 @@ public static class Maze
         List<Cell> result = new List<Cell>();
         foreach (var cell in grid.Cells)
         {
-            if (cell.Links.Count == 1) 
+            if (cell.Links.Count == 1)
                 result.Add(cell);
         }
 
