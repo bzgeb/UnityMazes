@@ -15,3 +15,6 @@ C# Maze Generation algorithms in Unity. Based on the book Mazes for Programmers.
 
 ## Hunt and Kill Maze
 ![Hunt and Kill Maze Example](https://github.com/bzgeb/UnityMazes/blob/main/HuntAndKill.png)
+
+## Recursive Backtracker Maze
+![Recursive Backtracker Example](https://github.com/bzgeb/UnityMazes/blob/main/RecursiveBacktracker.png)
