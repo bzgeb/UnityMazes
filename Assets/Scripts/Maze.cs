@@ -140,7 +140,8 @@ public static class Maze
         Sidewinder,
         AldousBroder,
         Wilson,
-        HuntAndKill
+        HuntAndKill,
+        RecursiveBacktracker
     }
 
     public delegate void GenerateMaze(Grid grid);
@@ -342,37 +343,27 @@ public static class Maze
         }
     }
 
-    public static IEnumerator GenerateHuntAndKill(Grid grid, MazeGenerator mazeGenerator)
+    public static void GenerateRecursiveBacktracker(Grid grid)
     {
-        var currentCell = GetRandomCell(grid);
+        GenerateRecursiveBacktracker(grid, GetRandomCell(grid));
+    }
+    public static void GenerateRecursiveBacktracker(Grid grid, Cell start)
+    {
+        var stack = new Stack<Cell>();
+        stack.Push(start);
 
-        while (currentCell != null)
+        while (stack.Count > 0)
         {
-            var unvisitedNeighbours = currentCell.GetNeighboursList().FindAll(c => c.Links.Count == 0);
-            if (unvisitedNeighbours.Count > 0)
+            Cell currentCell = stack.Peek();
+            var unvisitedNeighbours = currentCell.GetNeighboursList().FindAll(cell => cell.Links.Count == 0);
+            
+            if (unvisitedNeighbours.Count == 0)
+                stack.Pop();
+            else
             {
                 var neighbour = unvisitedNeighbours.Sample();
                 currentCell.Link(neighbour, true);
-                currentCell = neighbour;
-                mazeGenerator.InstantiateMazeTiles(grid, false);
-                yield return new WaitForSeconds(0.1f);
-            }
-            else
-            {
-                currentCell = null;
-                foreach (var cell in grid.Cells)
-                {
-                    var visitedNeighbours = cell.GetNeighboursList().FindAll(c => c.Links.Count > 0);
-                    if (cell.Links.Count == 0 && visitedNeighbours.Count > 0)
-                    {
-                        currentCell = cell;
-                        var neighbour = visitedNeighbours.Sample();
-                        currentCell.Link(neighbour, true);
-                        mazeGenerator.InstantiateMazeTiles(grid, false);
-                        yield return new WaitForSeconds(0.1f);
-                        break;
-                    }
-                }
+                stack.Push(neighbour);
             }
         }
     }

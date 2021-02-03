@@ -36,6 +36,9 @@ public class MazeGenerator : MonoBehaviour
             case Maze.GenerationAlgorithm.HuntAndKill:
                 Maze.GenerateHuntAndKill(grid);
                 break;
+            case Maze.GenerationAlgorithm.RecursiveBacktracker:
+                Maze.GenerateRecursiveBacktracker(grid);
+                break;
         }
 
         InstantiateMazeTiles(grid, true);
@@ -145,7 +148,8 @@ public class MazeGenerator : MonoBehaviour
             Maze.GenerateSidewinder,
             Maze.GenerateAldousBroder,
             Maze.GenerateWilson,
-            Maze.GenerateHuntAndKill
+            Maze.GenerateHuntAndKill,
+            Maze.GenerateRecursiveBacktracker
         };
 
         StringBuilder result = new StringBuilder();
