@@ -1,7 +1,10 @@
 using UnityEngine;
 
-public class DebugDistance : MonoBehaviour
+namespace Mazes
 {
-    public Cell Root;
-    public int DistanceFromRoot;
+    public class DebugDistance : MonoBehaviour
+    {
+        public Cell Root;
+        public int DistanceFromRoot;
+    }
 }
