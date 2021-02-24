@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using UnityEngine;
@@ -12,6 +13,8 @@ namespace Mazes
         [SerializeField] Color _mazeColor;
         [SerializeField] int _columns = 20;
         [SerializeField] int _rows = 20;
+        [SerializeField] TextAsset _asciiMask;
+        bool _hasMask;
 
         readonly List<MazeTile> _liveMazeTiles = new List<MazeTile>();
 
@@ -19,10 +22,17 @@ namespace Mazes
         {
             CalculateAverageDeadEnds(1);
 
-            var mask = new Mask(_columns, _rows);
-//            mask.SetCell(0, 0, false);
-//            mask.SetCell(2, 2, false);
-//            mask.SetCell(4, 4, false);
+            _hasMask = _asciiMask != null;
+
+            Mask mask = null;
+            if (_hasMask)
+            {
+                StringReader stringReader = new StringReader(_asciiMask.text);
+                mask = new Mask(stringReader);
+                _columns = mask.Columns;
+                _rows = mask.Rows;
+            }
+
             var grid = new Grid(_columns, _rows, mask);
 
             switch (_generationAlgorithm)

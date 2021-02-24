@@ -1,5 +1,9 @@
-﻿using UnityEditor;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using UnityEditor;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Mazes
 {
@@ -22,6 +26,51 @@ namespace Mazes
                 {
                     Cells[col, row] = true;
                 }
+            }
+        }
+
+        public Mask(StringReader stringReader)
+        {
+            // Collect the masked cells
+            string line = "";
+            int row = 0;
+            int col = 0;
+            List<Vector2Int> maskedCells = new List<Vector2Int>();
+            while ((line = stringReader.ReadLine()) != null)
+            {
+                col = 0;
+                foreach (var character in line)
+                {
+                    switch (Char.ToLower(character))
+                    {
+                        case '.':
+                            ++col;
+                            break;
+                        case 'x':
+                            maskedCells.Add(new Vector2Int(col, row));
+                            ++col;
+                            break;
+                    }
+                }
+                ++row;
+            }
+
+            // Initialize the Cells
+            Columns = col;
+            Rows = row;
+            Cells = new bool[Columns, Rows];
+            for (col = 0; col < Columns; ++col)
+            {
+                for (row = 0; row < Rows; ++row)
+                {
+                    Cells[col, row] = true;
+                }
+            }
+
+            // Mask the Cells
+            foreach (var maskedCell in maskedCells)
+            {
+                Cells[maskedCell.x, Rows - maskedCell.y] = false;
             }
         }
 
