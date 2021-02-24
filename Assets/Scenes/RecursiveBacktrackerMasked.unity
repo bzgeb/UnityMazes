@@ -486,7 +486,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a3a482f4175d8844a012ba378fa2d92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  filename: RecursiveBacktracker
+  filename: RecursiveBacktrackerMasked
 --- !u!4 &1621104918
 Transform:
   m_ObjectHideFlags: 0
