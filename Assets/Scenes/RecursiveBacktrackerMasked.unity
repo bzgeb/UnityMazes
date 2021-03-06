@@ -442,7 +442,8 @@ MonoBehaviour:
   _mazeColor: {r: 1, g: 0.51708215, b: 0.468, a: 1}
   _columns: 20
   _rows: 20
-  _asciiMask: {fileID: 4900000, guid: 5b7f68af86eae8a4eb1885e3c7afb39a, type: 3}
+  _asciiMask: {fileID: 0}
+  _imageMask: {fileID: 2800000, guid: 6a4a1cc096b460642bd3b996163dfe70, type: 3}
 --- !u!4 &1526044320
 Transform:
   m_ObjectHideFlags: 0

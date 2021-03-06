@@ -14,6 +14,7 @@ namespace Mazes
         [SerializeField] int _columns = 20;
         [SerializeField] int _rows = 20;
         [SerializeField] TextAsset _asciiMask;
+        [SerializeField] Texture2D _imageMask;
         bool _hasMask;
 
         readonly List<MazeTile> _liveMazeTiles = new List<MazeTile>();
@@ -22,13 +23,19 @@ namespace Mazes
         {
             CalculateAverageDeadEnds(1);
 
-            _hasMask = _asciiMask != null;
-
             Mask mask = null;
-            if (_hasMask)
+            if (_asciiMask != null)
             {
+                _hasMask = true;
                 StringReader stringReader = new StringReader(_asciiMask.text);
                 mask = new Mask(stringReader);
+                _columns = mask.Columns;
+                _rows = mask.Rows;
+            }
+            else if (_imageMask != null)
+            {
+                _hasMask = true;
+                mask = new Mask(_imageMask);
                 _columns = mask.Columns;
                 _rows = mask.Rows;
             }

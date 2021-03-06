@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -29,6 +28,31 @@ namespace Mazes
             }
         }
 
+        public Mask(Texture2D textureMask)
+        {
+            Columns = textureMask.width;
+            Rows = textureMask.height;
+            Cells = new bool[Columns, Rows];
+            for (int col = 0; col < Columns; ++col)
+            {
+                for (int row = 0; row < Rows; ++row)
+                {
+                    Cells[col, row] = true;
+                }
+            }
+
+            for (int col = 0; col < Columns; ++col)
+            {
+                for (int row = 0; row < Rows; ++row)
+                {
+                    if (textureMask.GetPixel(col, row) == Color.black)
+                    {
+                        Cells[col, row] = false;
+                    }
+                }
+            }
+        }
+
         public Mask(StringReader stringReader)
         {
             // Collect the masked cells
@@ -52,6 +76,7 @@ namespace Mazes
                             break;
                     }
                 }
+
                 ++row;
             }
 
@@ -82,7 +107,7 @@ namespace Mazes
         public static Vector2Int GetRandomLocation(Mask mask)
         {
             if (mask.Count() == 0) return new Vector2Int(-1, -1);
-                
+
             int randomColumn = Random.Range(0, mask.Columns);
             int randomRow = Random.Range(0, mask.Rows);
             while (mask.Cells[randomColumn, randomRow] == false)
